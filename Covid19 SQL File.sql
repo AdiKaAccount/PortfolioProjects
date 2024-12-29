@@ -79,28 +79,20 @@ ORDER BY 2 DESC;
 
 
 -- Looking at continents with the highest infection rate
--- Create view 
-CREATE VIEW ContinentWithHighestInfectionRate
-AS
 SELECT continent, MAX(total_cases) AS max_infection_count, MAX((total_cases/population))*100 AS infection_rate
 FROM [Covid-19 Project]..covid_deaths
 WHERE continent IS NOT NULL
-GROUP BY continent;
-SELECT * 
-FROM ContinentWithHighestInfectionRate
-ORDER BY 3 DESC
+GROUP BY continent
+ORDER BY 3 DESC;
 
 
 
 -- GLOBAL NUMBERS
 -- Looking at the total number of cases/death/death_percentage in the world
-CREATE VIEW Death_Percentage
-AS
 SELECT SUM(total_cases) AS total_cases, SUM(total_deaths) AS total_deaths, (SUM(total_deaths)/SUM(total_cases))*100 AS death_percentage
 FROM [Covid-19 Project]..covid_deaths
 WHERE continent IS NOT NULL;
-SELECT *
-FROM Death_Percentage
+
 
 -- Looking at the number of cases/death in the world
 
@@ -170,6 +162,24 @@ ORDER BY 2,3
 
 
 -- CREATING VIEW TO STORE DATA FOR LATER VISUALIZATION
+CREATE VIEW ContinentWithHighestInfectionRate
+AS
+SELECT continent, MAX(total_cases) AS max_infection_count, MAX((total_cases/population))*100 AS infection_rate
+FROM [Covid-19 Project]..covid_deaths
+WHERE continent IS NOT NULL
+GROUP BY continent;
+SELECT * 
+FROM ContinentWithHighestInfectionRate
+ORDER BY 3 DESC
+
+CREATE VIEW Death_Percentage
+AS
+SELECT SUM(total_cases) AS total_cases, SUM(total_deaths) AS total_deaths, (SUM(total_deaths)/SUM(total_cases))*100 AS death_percentage
+FROM [Covid-19 Project]..covid_deaths
+WHERE continent IS NOT NULL;
+SELECT *
+FROM Death_Percentage
+
 CREATE VIEW Percent_Population_Vaccinated
 AS
 SELECT DISTINCT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
@@ -180,7 +190,6 @@ JOIN covid_vaccinations vac
 	ON dea.location = vac.location
 	AND dea.date = vac.date
 WHERE dea.continent IS NOT NULL AND vac.new_vaccinations IS NOT NULL
-
 SELECT * 
 FROM Percent_Population_Vaccinated
 ORDER BY 2,3
